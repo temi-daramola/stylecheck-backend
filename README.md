@@ -32,10 +32,15 @@ npm run dev
 
 Staging and production take their values from the host's dashboard, not from a file.
 
-## Creating supervisors
-There is no public signup. An administrator creates accounts:
+## Accounts and the admin area
+There is no public signup. An **admin** adds supervisors from the **Admin** page in the app (name + email). The supervisor receives an email with a link to set their own password (valid 72 hours, single use). Admins can also resend an invite and deactivate or reactivate accounts.
+
+**First administrator (no code needed on the host):** set `INITIAL_ADMIN_EMAIL` and `INITIAL_ADMIN_PASSWORD` (optionally `INITIAL_ADMIN_NAME`) in the host's environment. On startup, if no active admin exists, that account is created, or the existing account with that email is promoted. Once you have signed in you can remove the password variable.
+
+Command-line fallback:
 ```bash
-npm run create-supervisor -- supervisor@university.edu "Prof. Jane Doe" "a-strong-password"
+npm run create-supervisor -- ada@university.edu "Dr. Ada Obi" "a-temporary-password"          # supervisor
+npm run create-supervisor -- you@university.edu "Your Name" "a-strong-password" --admin        # admin
 ```
 
 ## Scripts
@@ -49,6 +54,7 @@ All responses use `{ status, message, data, code, requestId }`.
 |---|---|
 | Auth | `POST /api/auth/login`, `/refresh`, `/logout`, `/forgot-password`, `/reset-password` |
 | Supervisor | `GET /api/supervisors/me`, `PATCH /api/supervisors/me/preferences` |
+| Admin (admins only) | `GET/POST /api/admin/supervisors`, `POST /api/admin/supervisors/:id/invite`, `PATCH /api/admin/supervisors/:id/active` |
 | Style manual | `GET /api/manuals/me`, `POST /api/manuals` (JSON text extracted in the browser) |
 | Checks | `POST /api/checks` (multipart `document`), `GET /api/checks`, `GET /api/checks/:id`, `GET /api/checks/:id/pdf`, `POST /api/checks/:id/share` |
 

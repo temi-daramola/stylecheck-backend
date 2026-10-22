@@ -1,7 +1,7 @@
 import { modules } from '@modules/_index.js';
 import { adapters } from '@adapters/_index.js';
 
-const { auth, supervisor, styleManual, compliance } = modules;
+const { auth, supervisor, admin, styleManual, compliance } = modules;
 const { jwtAdapter } = adapters.jwt;
 const { passwordAdapter } = adapters.password;
 const { geminiAdapter } = adapters.gemini;
@@ -31,6 +31,15 @@ export function createDependencies() {
     logger,
   });
   const supervisorController = new supervisor.controller.SupervisorController(supervisorDAO);
+  const adminController = new admin.controller.AdminController({
+    supervisorDAO,
+    refreshTokenDAO,
+    passwordResetTokenDAO,
+    passwordAdapter,
+    jwtAdapter,
+    brevoAdapter,
+    logger,
+  });
   const styleManualController = new styleManual.controller.StyleManualController(
     styleManualDAO,
     geminiAdapter
@@ -47,6 +56,7 @@ export function createDependencies() {
   return Object.freeze({
     auth: { authController },
     supervisor: { supervisorController },
+    admin: { adminController, requireAdmin: admin.utils.createRequireAdmin(supervisorDAO) },
     styleManual: { styleManualController },
     compliance: { complianceController },
   });

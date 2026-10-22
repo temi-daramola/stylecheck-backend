@@ -42,6 +42,7 @@ export const AuthConstants = Object.freeze({
     SESSION_EXPIRED: 'Session expired, please log in again',
     SESSION_REVOKED: 'Session revoked, please log in again',
     ACCOUNT_NOT_FOUND: 'Account not found',
+    ACCOUNT_DEACTIVATED: 'This account has been deactivated. Please contact your administrator.',
     EMAIL_REQUIRED: 'Email is required',
     EMAIL_INVALID: 'Invalid email address',
     PASSWORD_REQUIRED: 'Password is required',

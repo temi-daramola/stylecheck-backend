@@ -1,7 +1,7 @@
 import { modules } from '@modules/_index.js';
 import { common } from '@common/_index.js';
 
-const { auth, supervisor, styleManual, compliance } = modules;
+const { auth, supervisor, admin, styleManual, compliance } = modules;
 const { ResponseUtils } = common.utilities;
 const { messages } = common.constants;
 
@@ -14,6 +14,7 @@ export function registerRoutes(app, dependencies) {
 
   app.use(auth.constants.API.BASE, auth.routes.createAuthRoutes(dependencies.auth));
   app.use(supervisor.constants.API.BASE, supervisor.routes.createSupervisorRoutes(dependencies.supervisor));
+  app.use(admin.constants.API.BASE, admin.routes.createAdminRoutes(dependencies.admin));
   app.use(styleManual.constants.API.BASE, styleManual.routes.createStyleManualRoutes(dependencies.styleManual));
   app.use(compliance.constants.API.BASE, compliance.routes.createComplianceRoutes(dependencies.compliance));
 }

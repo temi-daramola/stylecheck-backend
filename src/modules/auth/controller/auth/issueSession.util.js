@@ -11,6 +11,7 @@ export async function issueSession({ supervisor, res, refreshTokenDAO, jwtAdapte
     id: supervisor._id,
     email: supervisor.email,
     name: supervisor.name,
+    role: supervisor.role,
   });
 
   const { rawToken, tokenHash } = jwtAdapter.generateRefreshToken();
@@ -23,7 +24,7 @@ export async function issueSession({ supervisor, res, refreshTokenDAO, jwtAdapte
   res.cookie(AuthConstants.REFRESH_COOKIE_NAME, rawToken, AuthConstants.COOKIE_OPTIONS);
 
   return {
-    account: { id: supervisor._id, email: supervisor.email, name: supervisor.name },
+    account: { id: supervisor._id, email: supervisor.email, name: supervisor.name, role: supervisor.role },
     accessToken,
   };
 }

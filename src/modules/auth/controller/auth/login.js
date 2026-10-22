@@ -15,6 +15,11 @@ export async function login(email, password, res) {
       throw new UnauthorizedError(MESSAGES.INVALID_CREDENTIALS, { layer: Layer.CONTROLLER });
     }
 
+    // Only after the password is proven correct, so this message cannot be used to probe for accounts.
+    if (!supervisor.isActive) {
+      throw new UnauthorizedError(MESSAGES.ACCOUNT_DEACTIVATED, { layer: Layer.CONTROLLER });
+    }
+
     const session = await issueSession({
       supervisor,
       res,

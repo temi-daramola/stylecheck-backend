@@ -17,6 +17,7 @@ export async function getProfile(supervisorId) {
       id: supervisor._id,
       name: supervisor.name,
       email: supervisor.email,
+      role: supervisor.role,
       preferences: supervisor.preferences,
     });
   } catch (error) {

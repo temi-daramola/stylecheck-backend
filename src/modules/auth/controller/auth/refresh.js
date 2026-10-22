@@ -33,6 +33,7 @@ export async function refresh(req, res) {
 
     const supervisor = await this.supervisorDAO.findById(stored.supervisorId);
     if (!supervisor) throw reject(res, MESSAGES.ACCOUNT_NOT_FOUND);
+    if (!supervisor.isActive) throw reject(res, MESSAGES.ACCOUNT_DEACTIVATED);
 
     await this.refreshTokenDAO.markUsed(tokenHash);
 

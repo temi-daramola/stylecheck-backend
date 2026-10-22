@@ -1,5 +1,6 @@
 export const SupervisorConstants = Object.freeze({
   RESOURCE: 'Supervisor',
+  ROLES: Object.freeze({ SUPERVISOR: 'supervisor', ADMIN: 'admin' }),
   PREFERENCE_KEYS: Object.freeze(['emailNotifications', 'showScoreOnDashboard']),
   MESSAGES: Object.freeze({
     PROFILE_FETCHED: 'Supervisor profile retrieved',
