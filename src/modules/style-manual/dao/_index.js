@@ -1,11 +1,5 @@
-import {
-  createStyleManualDAO,
-  findActiveStyleManualDAO,
-  deactivateAllStyleManualsDAO,
-} from './styleManual.dao.js';
+import StyleManualDAO from '@modules/style-manual/dao/style-manual-dao/_index.js';
 
 export const dao = Object.freeze({
-  create: createStyleManualDAO,
-  findActive: findActiveStyleManualDAO,
-  deactivateAll: deactivateAllStyleManualsDAO,
+  StyleManualDAO,
 });

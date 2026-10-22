@@ -1,15 +1,59 @@
+const PROMPT_TEXT_PLACEHOLDER = '{{STYLE_MANUAL_TEXT}}';
+
+const RULE_EXTRACTION_PROMPT = `You are an academic style manual analyser. You will be given the full text of an institutional academic style manual.
+
+Your task is to identify and extract ALL formatting, structural, and citation rules from this document into a consistent, structured list.
+
+Return ONLY valid JSON in this exact format:
+{
+  "rules": [
+    {
+      "ruleId": "R01",
+      "ruleName": "<short rule name>",
+      "description": "<one sentence describing exactly what this rule requires>"
+    }
+  ]
+}
+
+Do not include commentary. Extract every rule you can identify.
+
+STYLE MANUAL TEXT:
+${PROMPT_TEXT_PLACEHOLDER}`;
+
 export const StyleManualConstants = Object.freeze({
-  ALLOWED_MIME_TYPES: [
-    'application/pdf',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/msword',
-  ],
-  MAX_FILE_SIZE_BYTES: 20 * 1024 * 1024, // 20 MB
-  MESSAGES: {
-    FETCH_SUCCESS: 'Active style manual retrieved',
+  RESOURCE: 'StyleManual',
+  FILE_TYPES: Object.freeze(['pdf', 'docx']),
+  MAX_FILE_NAME_LENGTH: 255,
+  MIN_EXTRACTED_TEXT_LENGTH: 200,
+  MAX_RULES: 200,
+  MAX_RULE_NAME_LENGTH: 200,
+  MAX_RULE_DESCRIPTION_LENGTH: 1000,
+  RULE_ID_PREFIX: 'R',
+  RULE_ID_PAD_LENGTH: 2,
+  PROMPT_TEXT_PLACEHOLDER,
+  RULE_EXTRACTION_PROMPT,
+  MESSAGES: Object.freeze({
+    FETCH_SUCCESS: 'Style manual retrieved successfully',
     UPLOAD_SUCCESS: 'Style manual updated successfully',
-    NOT_FOUND: 'No active style manual found',
-    FILE_REQUIRED: 'A style manual file is required',
-    INVALID_FORMAT: 'Only PDF or DOCX files up to 20MB are allowed',
-  },
+    FILE_NAME_REQUIRED: 'File name is required',
+    FILE_NAME_TOO_LONG: 'File name is too long',
+    FILE_TYPE_INVALID: 'File type must be pdf or docx',
+    FILE_SIZE_INVALID: 'File size must be a non-negative number',
+    TEXT_REQUIRED: 'Extracted text is required',
+    TEXT_TOO_SHORT: 'This file has no readable text. Please upload a text-based PDF or a DOCX.',
+    TEXT_TOO_LONG: 'The style manual text is too long',
+    NO_RULES_EXTRACTED: 'No style rules could be found in this document. Please check that it is a style manual.',
+    GET_FAILED: 'Failed to retrieve style manual',
+    UPLOAD_FAILED: 'Failed to process style manual',
+  }),
+  CODES: Object.freeze({
+    NO_RULES_EXTRACTED: 'NO_RULES_EXTRACTED',
+    GET_FAILED: 'STYLE_MANUAL_GET_FAILED',
+    UPLOAD_FAILED: 'STYLE_MANUAL_UPLOAD_FAILED',
+  }),
+  API: Object.freeze({
+    BASE: '/api/manuals',
+    ME: '/me',
+    ROOT: '/',
+  }),
 });
