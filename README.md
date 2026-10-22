@@ -35,9 +35,7 @@ Staging and production take their values from the host's dashboard, not from a f
 ## Accounts and the admin area
 There is no public signup. An **admin** adds supervisors from the **Admin** page in the app (name + email). The supervisor receives an email with a link to set their own password (valid 72 hours, single use). Admins can also resend an invite and deactivate or reactivate accounts.
 
-**First administrator (no code needed on the host):** set `INITIAL_ADMIN_EMAIL` and `INITIAL_ADMIN_PASSWORD` (optionally `INITIAL_ADMIN_NAME`) in the host's environment. On startup, if no active admin exists, that account is created, or the existing account with that email is promoted. Once you have signed in you can remove the password variable.
-
-Command-line way to create the first admin (once):
+**First administrator:** create it once from your machine with the command below. To create it in the deployed database, temporarily point `MONGODB_URI` at that database when you run it. There is no web or startup option for creating admins.
 ```bash
 npm run create-admin -- you@university.edu "Your Name" "a-strong-password"
 ```

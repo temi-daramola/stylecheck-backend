@@ -2,7 +2,6 @@ import { listSupervisors } from '@modules/admin/controller/admin/listSupervisors
 import { createSupervisor } from '@modules/admin/controller/admin/createSupervisor.js';
 import { resendInvite } from '@modules/admin/controller/admin/resendInvite.js';
 import { setSupervisorActive } from '@modules/admin/controller/admin/setSupervisorActive.js';
-import { ensureInitialAdmin } from '@modules/admin/controller/admin/ensureInitialAdmin.js';
 
 class AdminController {
   constructor({ supervisorDAO, refreshTokenDAO, passwordResetTokenDAO, passwordAdapter, jwtAdapter, brevoAdapter, logger }) {
@@ -29,10 +28,6 @@ class AdminController {
 
   async setSupervisorActive(id, isActive, actorId) {
     return setSupervisorActive.call(this, id, isActive, actorId);
-  }
-
-  async ensureInitialAdmin() {
-    return ensureInitialAdmin.call(this);
   }
 }
 

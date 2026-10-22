@@ -2,7 +2,6 @@ export const AdminConstants = Object.freeze({
   TEMP_PASSWORD_BYTES: 18,
   INVITE_TTL_HOURS: 72,
   SET_PASSWORD_PATH: '/reset-password',
-  MIN_INITIAL_ADMIN_PASSWORD_LENGTH: 8,
   MAX_NAME_LENGTH: 120,
   RATE_LIMITS: Object.freeze({
     INVITE: Object.freeze({ windowMinutes: 60, max: 40, message: 'Too many invitations sent recently. Please try again later.' }),
@@ -32,9 +31,6 @@ export const AdminConstants = Object.freeze({
     INVITE_FAILED: 'Failed to send the invitation',
     ACTIVE_FAILED: 'Failed to update the supervisor',
     INVITE_LOG: 'Could not send supervisor invitation email',
-    ADMIN_BOOTSTRAPPED: 'Initial administrator created',
-    ADMIN_PROMOTED: 'Existing account promoted to administrator',
-    ADMIN_PASSWORD_WEAK: 'INITIAL_ADMIN_PASSWORD is too short; initial administrator not created',
   }),
   CODES: Object.freeze({
     LIST_FAILED: 'ADMIN_LIST_FAILED',

@@ -60,11 +60,6 @@ export const env = Object.freeze({
   BREVO_SENDER_EMAIL: requireEnv('BREVO_SENDER_EMAIL'),
   BREVO_SENDER_NAME: process.env.BREVO_SENDER_NAME ?? 'StyleCheck',
 
-  // Optional. When no admin exists yet, these create (or promote) the first one on startup.
-  INITIAL_ADMIN_EMAIL: process.env.INITIAL_ADMIN_EMAIL || null,
-  INITIAL_ADMIN_PASSWORD: process.env.INITIAL_ADMIN_PASSWORD || null,
-  INITIAL_ADMIN_NAME: process.env.INITIAL_ADMIN_NAME || 'Administrator',
-
   MAX_MANUAL_TEXT_LENGTH: Number(process.env.MAX_MANUAL_TEXT_LENGTH ?? 500000),
   MAX_DOC_SIZE_MB: Number(process.env.MAX_DOC_SIZE_MB ?? 50),
   UPLOAD_DIR: process.env.UPLOAD_DIR ?? './uploads',

@@ -21,16 +21,13 @@ async function bootstrap() {
   // 4. Create dependencies (DI container)
   const dependencies = appSetup.createDependencies();
 
-  // 5. Make sure a first administrator exists (only when INITIAL_ADMIN_* is configured)
-  await dependencies.admin.adminController.ensureInitialAdmin();
-
-  // 6. Register routes
+  // 5. Register routes
   appSetup.registerRoutes(expressApp, dependencies);
 
-  // 7. Apply error handlers (central error middleware must be last)
+  // 6. Apply error handlers (central error middleware must be last)
   appSetup.applyErrorHandlers(expressApp);
 
-  // 8. Start server
+  // 7. Start server
   await appSetup.startup.startServer(expressApp, env.PORT);
 }
 

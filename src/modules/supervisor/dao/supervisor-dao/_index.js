@@ -5,7 +5,6 @@ import { findAll } from '@modules/supervisor/dao/supervisor-dao/findAll.dao.js';
 import { updatePreferences } from '@modules/supervisor/dao/supervisor-dao/updatePreferences.dao.js';
 import { updatePasswordHash } from '@modules/supervisor/dao/supervisor-dao/updatePasswordHash.dao.js';
 import { setActive } from '@modules/supervisor/dao/supervisor-dao/setActive.dao.js';
-import { setRole } from '@modules/supervisor/dao/supervisor-dao/setRole.dao.js';
 import { countActiveAdmins } from '@modules/supervisor/dao/supervisor-dao/countActiveAdmins.dao.js';
 
 class SupervisorDAO {
@@ -35,10 +34,6 @@ class SupervisorDAO {
 
   async setActive(id, isActive) {
     return setActive.call(this, id, isActive);
-  }
-
-  async setRole(id, role) {
-    return setRole.call(this, id, role);
   }
 
   async countActiveAdmins() {
