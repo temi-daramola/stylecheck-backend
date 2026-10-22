@@ -1,19 +1,77 @@
+import { env } from '@common/constants/env.constants.js';
+
+const MS_PER_DAY = 24 * 60 * 60 * 1000;
+const COOKIE_PATH = '/api/auth';
+
 export const AuthConstants = Object.freeze({
-  REFRESH_TOKEN_EXPIRY_DAYS: 30,
   REFRESH_COOKIE_NAME: 'refreshToken',
-  REFRESH_COOKIE_PATH: '/api/auth',
-  COOKIE_OPTIONS: {
+  REFRESH_COOKIE_PATH: COOKIE_PATH,
+  COOKIE_OPTIONS: Object.freeze({
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
+    secure: env.IS_PRODUCTION_LIKE,
     sameSite: 'lax',
-    path: '/api/auth',
-    maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
-  },
-  ERRORS: {
+    path: COOKIE_PATH,
+    maxAge: env.REFRESH_TOKEN_EXPIRES_DAYS * MS_PER_DAY,
+  }),
+  CLEAR_COOKIE_OPTIONS: Object.freeze({
+    httpOnly: true,
+    secure: env.IS_PRODUCTION_LIKE,
+    sameSite: 'lax',
+    path: COOKIE_PATH,
+  }),
+  RESOURCE: 'RefreshToken',
+  RESET_RESOURCE: 'PasswordResetToken',
+  RESET_TOKEN_TTL_MINUTES: 60,
+  RESET_LINK_PATH: '/reset-password',
+  MIN_PASSWORD_LENGTH: 8,
+  MAX_PASSWORD_LENGTH: 128,
+  RATE_LIMITS: Object.freeze({
+    LOGIN: Object.freeze({ windowMinutes: 15, max: 10, message: 'Too many login attempts. Please try again later.' }),
+    FORGOT: Object.freeze({ windowMinutes: 60, max: 5, message: 'Too many reset requests. Please try again later.' }),
+    RESET: Object.freeze({ windowMinutes: 60, max: 10, message: 'Too many attempts. Please try again later.' }),
+  }),
+  EMAIL: Object.freeze({
+    RESET_SUBJECT: 'Reset your StyleCheck password',
+  }),
+  MESSAGES: Object.freeze({
+    LOGIN_SUCCESS: 'Logged in successfully',
+    LOGOUT_SUCCESS: 'Logged out successfully',
+    REFRESH_SUCCESS: 'Session refreshed successfully',
     INVALID_CREDENTIALS: 'Invalid email or password',
-    SESSION_REVOKED: 'Session revoked, please log in again',
-    SESSION_EXPIRED: 'Session expired, please log in again',
     NOT_AUTHENTICATED: 'Not authenticated',
+    SESSION_EXPIRED: 'Session expired, please log in again',
+    SESSION_REVOKED: 'Session revoked, please log in again',
     ACCOUNT_NOT_FOUND: 'Account not found',
-  },
+    EMAIL_REQUIRED: 'Email is required',
+    EMAIL_INVALID: 'Invalid email address',
+    PASSWORD_REQUIRED: 'Password is required',
+    PASSWORD_TOO_SHORT: 'Password must be at least 8 characters',
+    PASSWORD_TOO_LONG: 'Password is too long',
+    TOKEN_REQUIRED: 'Reset token is required',
+    FORGOT_ACCEPTED: 'If that email is registered, a reset link has been sent.',
+    RESET_SUCCESS: 'Password reset successfully. Please log in.',
+    RESET_TOKEN_INVALID: 'This reset link is invalid or has expired.',
+    LOGIN_FAILED: 'Login failed',
+    REFRESH_FAILED: 'Session refresh failed',
+    LOGOUT_FAILED: 'Logout failed',
+    FORGOT_FAILED: 'Could not process the reset request',
+    RESET_FAILED: 'Could not reset the password',
+    RESET_EMAIL_LOG: 'Could not send password reset email',
+  }),
+  CODES: Object.freeze({
+    LOGIN_FAILED: 'LOGIN_FAILED',
+    REFRESH_FAILED: 'REFRESH_FAILED',
+    LOGOUT_FAILED: 'LOGOUT_FAILED',
+    FORGOT_FAILED: 'FORGOT_PASSWORD_FAILED',
+    RESET_FAILED: 'RESET_PASSWORD_FAILED',
+    RESET_TOKEN_INVALID: 'RESET_TOKEN_INVALID',
+  }),
+  API: Object.freeze({
+    BASE: '/api/auth',
+    LOGIN: '/login',
+    REFRESH: '/refresh',
+    LOGOUT: '/logout',
+    FORGOT_PASSWORD: '/forgot-password',
+    RESET_PASSWORD: '/reset-password',
+  }),
 });
