@@ -60,7 +60,9 @@ export const ComplianceConstants = Object.freeze({
   }),
   MAX_STUDENT_NAME_LENGTH: 200,
   MAX_SHARE_MESSAGE_LENGTH: 2000,
-  STATUS: Object.freeze({ PASSED: 'Passed', FAILED: 'Failed' }),
+  PENDING_TTL_HOURS: 24,
+  MANUAL_READY_STATUS: 'ready',
+  STATUS: Object.freeze({ PASSED: 'Passed', FAILED: 'Failed', PENDING: 'pending', COMPLETED: 'completed' }),
   BANDS: Object.freeze({
     FULL: 'Full Compliance',
     PARTIAL: 'Partial Compliance',
@@ -101,6 +103,8 @@ export const ComplianceConstants = Object.freeze({
     DOCUMENT_TOO_LONG: 'This document is too long to analyse.',
     RESULTS_INCOMPLETE: 'The AI returned an incomplete analysis. Please try again.',
     CHECK_FAILED: 'Failed to run compliance check',
+    RETRY_NOT_FOUND: 'Pending compliance check',
+    MANUAL_NOT_READY: 'Your style manual has not been processed yet. Open Settings to process it, then try again.',
     LIST_FAILED: 'Failed to retrieve compliance checks',
     DETAIL_FAILED: 'Failed to retrieve compliance report',
     PDF_FAILED: 'Failed to generate the report',
@@ -110,6 +114,7 @@ export const ComplianceConstants = Object.freeze({
   CODES: Object.freeze({
     MANUAL_REQUIRED: 'STYLE_MANUAL_REQUIRED',
     CHECK_FAILED: 'COMPLIANCE_CHECK_FAILED',
+    MANUAL_NOT_READY: 'STYLE_MANUAL_NOT_READY',
     LIST_FAILED: 'COMPLIANCE_LIST_FAILED',
     DETAIL_FAILED: 'COMPLIANCE_DETAIL_FAILED',
     PDF_FAILED: 'COMPLIANCE_PDF_FAILED',
@@ -122,5 +127,6 @@ export const ComplianceConstants = Object.freeze({
     BY_ID: '/:id',
     PDF: '/:id/pdf',
     SHARE: '/:id/share',
+    RETRY: '/:id/retry',
   }),
 });

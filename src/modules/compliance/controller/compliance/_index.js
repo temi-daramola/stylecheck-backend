@@ -1,4 +1,5 @@
 import { createCheck } from '@modules/compliance/controller/compliance/createCheck.js';
+import { retryCheck } from '@modules/compliance/controller/compliance/retryCheck.js';
 import { notifySupervisor } from '@modules/compliance/controller/compliance/notifySupervisor.js';
 import { listChecks } from '@modules/compliance/controller/compliance/listChecks.js';
 import { getCheck } from '@modules/compliance/controller/compliance/getCheck.js';
@@ -20,6 +21,10 @@ class ComplianceController {
 
   async createCheck(supervisorId, input) {
     return createCheck.call(this, supervisorId, input);
+  }
+
+  async retryCheck(id, supervisorId) {
+    return retryCheck.call(this, id, supervisorId);
   }
 
   notifySupervisor(supervisorId, check) {

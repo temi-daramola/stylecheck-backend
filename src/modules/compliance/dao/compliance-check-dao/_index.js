@@ -1,4 +1,7 @@
 import { create } from '@modules/compliance/dao/compliance-check-dao/create.dao.js';
+import { createPending } from '@modules/compliance/dao/compliance-check-dao/createPending.dao.js';
+import { findPendingForSupervisor } from '@modules/compliance/dao/compliance-check-dao/findPendingForSupervisor.dao.js';
+import { complete } from '@modules/compliance/dao/compliance-check-dao/complete.dao.js';
 import { findByIdForSupervisor } from '@modules/compliance/dao/compliance-check-dao/findByIdForSupervisor.dao.js';
 import { findPaginatedBySupervisor } from '@modules/compliance/dao/compliance-check-dao/findPaginatedBySupervisor.dao.js';
 import { countBySupervisor } from '@modules/compliance/dao/compliance-check-dao/countBySupervisor.dao.js';
@@ -8,6 +11,18 @@ import { deleteById } from '@modules/compliance/dao/compliance-check-dao/deleteB
 class ComplianceCheckDAO {
   async create(data) {
     return create.call(this, data);
+  }
+
+  async createPending(data) {
+    return createPending.call(this, data);
+  }
+
+  async findPendingForSupervisor(id, supervisorId) {
+    return findPendingForSupervisor.call(this, id, supervisorId);
+  }
+
+  async complete(id, scoreFields) {
+    return complete.call(this, id, scoreFields);
   }
 
   async findByIdForSupervisor(id, supervisorId) {

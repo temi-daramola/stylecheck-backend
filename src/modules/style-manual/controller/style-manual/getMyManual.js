@@ -1,5 +1,6 @@
 import { common } from '@common/_index.js';
 import { StyleManualConstants } from '@modules/style-manual/constants/styleManual.constants.js';
+import { utils } from '@modules/style-manual/utils/_index.js';
 
 const { ResponseUtils } = common.utilities;
 const { AppError } = common.errors;
@@ -10,7 +11,7 @@ export async function getMyManual(supervisorId) {
   try {
     // "No manual yet" is a valid state, not an error: return success with null data.
     const manual = await this.styleManualDAO.findBySupervisorId(supervisorId);
-    return ResponseUtils.success(MESSAGES.FETCH_SUCCESS, manual);
+    return ResponseUtils.success(MESSAGES.FETCH_SUCCESS, manual ? utils.toManualDto(manual) : null);
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw new AppError(MESSAGES.GET_FAILED, {

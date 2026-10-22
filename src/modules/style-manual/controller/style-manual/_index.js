@@ -1,5 +1,6 @@
 import { getMyManual } from '@modules/style-manual/controller/style-manual/getMyManual.js';
 import { uploadManual } from '@modules/style-manual/controller/style-manual/uploadManual.js';
+import { processManual } from '@modules/style-manual/controller/style-manual/processManual.js';
 
 class StyleManualController {
   constructor(styleManualDAO, geminiAdapter) {
@@ -13,6 +14,10 @@ class StyleManualController {
 
   async uploadManual(supervisorId, input) {
     return uploadManual.call(this, supervisorId, input);
+  }
+
+  async processManual(supervisorId) {
+    return processManual.call(this, supervisorId);
   }
 }
 

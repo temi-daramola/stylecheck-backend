@@ -1,27 +1,28 @@
 import { common } from '@common/_index.js';
 import { ComplianceConstants } from '@modules/compliance/constants/compliance.constants.js';
 import { utils } from '@modules/compliance/utils/_index.js';
+import { requireReadyManual } from '@modules/compliance/controller/compliance/requireReadyManual.util.js';
+import { analyseCheck, withPendingReference } from '@modules/compliance/controller/compliance/analyseCheck.util.js';
 
 const { ResponseUtils } = common.utilities;
-const { AppError, ValidationError, ForbiddenError } = common.errors;
+const { AppError, ValidationError } = common.errors;
 const { Layer } = common.constants;
 const { MESSAGES, CODES, MAX_DOCUMENT_TEXT_LENGTH, MIN_DOCUMENT_TEXT_LENGTH } = ComplianceConstants;
-const { buildCompliancePrompt, alignResults } = utils.prompt;
-const { computeScore } = utils.scoring;
 const { removeFile } = utils.upload;
 const { toCheckDetailDto } = utils.report;
 
+/**
+ * One ordinary request in three steps: read the document, save the check as pending (so the work
+ * survives an AI failure), then run the AI analysis. If the analysis fails, the error carries the
+ * pending check's id and the supervisor can retry without uploading the document again.
+ */
 export async function createCheck(supervisorId, { studentName, chapterSection, file }) {
   try {
     if (!file) {
       throw new ValidationError(MESSAGES.FILE_REQUIRED, { layer: Layer.CONTROLLER });
     }
 
-    // Server-side gate: the dashboard lock is advisory, this is the authority.
-    const manual = await this.styleManualDAO.findBySupervisorId(supervisorId);
-    if (!manual || manual.rules.length === 0) {
-      throw new ForbiddenError(MESSAGES.MANUAL_REQUIRED, { layer: Layer.CONTROLLER, code: CODES.MANUAL_REQUIRED });
-    }
+    const manual = await requireReadyManual.call(this, supervisorId);
 
     // Text (content rules) and formatting (formatting rules) come from the same file, in parallel.
     const [documentText, formattingProfile] = await Promise.all([
@@ -36,30 +37,24 @@ export async function createCheck(supervisorId, { studentName, chapterSection, f
       throw new ValidationError(MESSAGES.DOCUMENT_TOO_LONG, { layer: Layer.CONTROLLER });
     }
 
-    const prompt = buildCompliancePrompt({ rules: manual.rules, documentText, formattingProfile });
-    const geminiResult = await this.adapters.geminiAdapter.generateJson(prompt);
-    const results = alignResults(manual.rules, geminiResult);
-
-    const check = await this.checkDAO.create({
+    // From here on the document's content is safe in the database, so the uploaded file is not needed again.
+    const pending = await this.checkDAO.createPending({
       supervisorId,
       studentName,
       chapterSection,
       documentFileName: file.originalname,
-      ...computeScore(results),
+      pendingInput: { documentText, formattingProfile },
     });
 
-    let ruleResults;
+    let analysis;
     try {
-      ruleResults = await this.ruleResultDAO.createMany(check._id, results);
+      analysis = await analyseCheck.call(this, pending, manual);
     } catch (error) {
-      // Never leave a check without its breakdown behind.
-      await this.checkDAO.deleteById(check._id);
-      throw error;
+      throw withPendingReference(error, pending._id);
     }
 
-    this.notifySupervisor(supervisorId, check);
-
-    return ResponseUtils.success(MESSAGES.CHECK_SUCCESS, toCheckDetailDto(check, ruleResults));
+    this.notifySupervisor(supervisorId, analysis.completed);
+    return ResponseUtils.success(MESSAGES.CHECK_SUCCESS, toCheckDetailDto(analysis.completed, analysis.ruleResults));
   } catch (error) {
     if (error instanceof AppError) throw error;
     throw new AppError(MESSAGES.CHECK_FAILED, {

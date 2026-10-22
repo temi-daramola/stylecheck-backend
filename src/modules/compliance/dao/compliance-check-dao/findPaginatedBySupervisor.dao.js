@@ -7,7 +7,7 @@ const { translateDbError } = common.errors;
 
 export async function findPaginatedBySupervisor(supervisorId, { page, pageSize }) {
   try {
-    return await ComplianceCheck.find({ supervisorId })
+    return await ComplianceCheck.find({ supervisorId, status: { $ne: 'pending' } })
       .sort({ checkDate: -1 })
       .skip((page - 1) * pageSize)
       .limit(pageSize);

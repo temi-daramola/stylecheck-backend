@@ -7,7 +7,7 @@ const { translateDbError } = common.errors;
 
 export async function countBySupervisor(supervisorId) {
   try {
-    return await ComplianceCheck.countDocuments({ supervisorId });
+    return await ComplianceCheck.countDocuments({ supervisorId, status: { $ne: 'pending' } });
   } catch (error) {
     throw translateDbError(error, { operation: 'read', resource: ComplianceConstants.RESOURCE });
   }
