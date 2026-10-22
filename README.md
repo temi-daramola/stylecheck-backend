@@ -26,7 +26,7 @@ npm run dev
 | `GEMINI_API_KEY` | yes | Google AI Studio |
 | `BREVO_API_KEY` | yes | Brevo transactional email |
 | `BREVO_SENDER_EMAIL` | yes | Must be a sender verified in Brevo |
-| `GEMINI_MODEL` | no | Default `gemini-2.0-flash-lite`; confirm it is current |
+| `GEMINI_MODEL` | no | Default `gemini-3.5-flash-lite`; confirm it is current |
 | `BREVO_SENDER_NAME`, `JWT_EXPIRES_IN`, `REFRESH_TOKEN_EXPIRES_DAYS`, `PORT`, `LOG_LEVEL`, `MAX_DOC_SIZE_MB`, `MAX_MANUAL_TEXT_LENGTH`, `UPLOAD_DIR`, `PYTHON_BIN` | no | See `src/common/constants/env.constants.js` |
 | `LOGTAIL_SOURCE_TOKEN` | no | Enables the hosted log destination (Better Stack) |
 

@@ -54,7 +54,7 @@ export const env = Object.freeze({
   REFRESH_TOKEN_EXPIRES_DAYS: Number(process.env.REFRESH_TOKEN_EXPIRES_DAYS ?? 30),
 
   GEMINI_API_KEY: requireEnv('GEMINI_API_KEY'),
-  GEMINI_MODEL: process.env.GEMINI_MODEL ?? 'gemini-2.0-flash-lite',
+  GEMINI_MODEL: process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite',
 
   BREVO_API_KEY: requireEnv('BREVO_API_KEY'),
   BREVO_SENDER_EMAIL: requireEnv('BREVO_SENDER_EMAIL'),
