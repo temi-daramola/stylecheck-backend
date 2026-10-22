@@ -1,13 +1,5 @@
-import {
-  CreateCheckController,
-  GetRecentChecksController,
-  GetCheckByIdController,
-  ShareReportController,
-} from './compliance.controller.js';
+import ComplianceController from '@modules/compliance/controller/compliance/_index.js';
 
 export const controller = Object.freeze({
-  CreateCheckController,
-  GetRecentChecksController,
-  GetCheckByIdController,
-  ShareReportController,
+  ComplianceController,
 });

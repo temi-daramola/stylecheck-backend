@@ -1,13 +1,7 @@
-import {
-  createComplianceCheckDAO,
-  findRecentChecksDAO,
-  findCheckByIdDAO,
-  updateCheckShareDAO,
-} from './compliance.dao.js';
+import ComplianceCheckDAO from '@modules/compliance/dao/compliance-check-dao/_index.js';
+import RuleResultDAO from '@modules/compliance/dao/rule-result-dao/_index.js';
 
 export const dao = Object.freeze({
-  create: createComplianceCheckDAO,
-  findRecent: findRecentChecksDAO,
-  findById: findCheckByIdDAO,
-  updateShare: updateCheckShareDAO,
+  ComplianceCheckDAO,
+  RuleResultDAO,
 });
