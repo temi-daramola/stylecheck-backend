@@ -1,48 +1,53 @@
 import { modules } from '@modules/_index.js';
+import { adapters } from '@adapters/_index.js';
 
-const { auth, styleManual, compliance } = modules;
+const { auth, supervisor, styleManual, compliance } = modules;
+const { jwtAdapter } = adapters.jwt;
+const { passwordAdapter } = adapters.password;
+const { geminiAdapter } = adapters.gemini;
+const { docxTextAdapter } = adapters.docxText;
+const { docxFormattingAdapter } = adapters.docxFormatting;
+const { pdfAdapter } = adapters.pdf;
+const { brevoAdapter } = adapters.brevo;
+const { logger } = adapters.logging;
 
 export function createDependencies() {
-  // Auth dependencies
-  const userDAO = auth.dao.user;
-  const refreshTokenDAO = auth.dao.refreshToken;
-  const loginController = new auth.controller.LoginController(userDAO, refreshTokenDAO);
-  const refreshController = new auth.controller.RefreshController(userDAO, refreshTokenDAO);
-  const logoutController = new auth.controller.LogoutController(refreshTokenDAO);
-  const meController = new auth.controller.MeController(userDAO);
+  // DAOs
+  const supervisorDAO = new supervisor.dao.SupervisorDAO();
+  const refreshTokenDAO = new auth.dao.RefreshTokenDAO();
+  const passwordResetTokenDAO = new auth.dao.PasswordResetTokenDAO();
+  const styleManualDAO = new styleManual.dao.StyleManualDAO();
+  const checkDAO = new compliance.dao.ComplianceCheckDAO();
+  const ruleResultDAO = new compliance.dao.RuleResultDAO();
 
-  // Style manual dependencies
-  const styleManualDAO = styleManual.dao;
-  const getActiveManualController = new styleManual.controller.GetActiveManualController(styleManualDAO);
-  const uploadManualController = new styleManual.controller.UploadManualController(styleManualDAO);
-
-  // Compliance dependencies
-  const complianceDAO = compliance.dao;
-  const createCheckController = new compliance.controller.CreateCheckController(complianceDAO);
-  const getRecentChecksController = new compliance.controller.GetRecentChecksController(complianceDAO);
-  const getCheckByIdController = new compliance.controller.GetCheckByIdController(complianceDAO);
-  const shareReportController = new compliance.controller.ShareReportController(complianceDAO);
+  // Controllers
+  const authController = new auth.controller.AuthController({
+    supervisorDAO,
+    refreshTokenDAO,
+    passwordResetTokenDAO,
+    passwordAdapter,
+    jwtAdapter,
+    brevoAdapter,
+    logger,
+  });
+  const supervisorController = new supervisor.controller.SupervisorController(supervisorDAO);
+  const styleManualController = new styleManual.controller.StyleManualController(
+    styleManualDAO,
+    geminiAdapter
+  );
+  const complianceController = new compliance.controller.ComplianceController({
+    checkDAO,
+    ruleResultDAO,
+    styleManualDAO,
+    supervisorDAO,
+    adapters: { docxTextAdapter, docxFormattingAdapter, geminiAdapter, pdfAdapter, brevoAdapter },
+    logger,
+  });
 
   return Object.freeze({
-    auth: {
-      userDAO,
-      refreshTokenDAO,
-      loginController,
-      refreshController,
-      logoutController,
-      meController,
-    },
-    styleManual: {
-      styleManualDAO,
-      getActiveManualController,
-      uploadManualController,
-    },
-    compliance: {
-      complianceDAO,
-      createCheckController,
-      getRecentChecksController,
-      getCheckByIdController,
-      shareReportController,
-    },
+    auth: { authController },
+    supervisor: { supervisorController },
+    styleManual: { styleManualController },
+    compliance: { complianceController },
   });
 }

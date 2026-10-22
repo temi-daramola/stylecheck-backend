@@ -24,3 +24,6 @@ Thumbs.db
 .vscode/*
 !.vscode/settings.json
 
+
+# Temporary student document uploads (deleted after processing)
+uploads/

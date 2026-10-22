@@ -11,3 +11,4 @@ export const database = Object.freeze({
     return mongoose.connection.readyState === 1;
   },
 });
+

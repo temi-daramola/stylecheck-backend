@@ -1,68 +1,44 @@
 import { AppError } from '@common/errors/AppError.js';
-import { Layer } from '@common/constants/layer.constants.js';
+import { http } from '@common/constants/http.constants.js';
+
+const { STATUS_CODES, CODES } = http;
 
 export class NotFoundError extends AppError {
-  constructor(resource = 'Resource', opts = {}) {
-    super(`${resource} not found`, {
-      statusCode: 404,
-      code: 'NOT_FOUND',
-      layer: opts.layer || Layer.CONTROLLER,
-      ...opts,
-    });
+  constructor(resource, opts = {}) {
+    super(`${resource} not found`, { ...opts, statusCode: STATUS_CODES.NOT_FOUND, code: CODES.NOT_FOUND });
   }
 }
 
 export class ValidationError extends AppError {
-  constructor(message = 'Validation failed', opts = {}, details = null) {
-    super(message, {
-      statusCode: 400,
-      code: 'VALIDATION_ERROR',
-      layer: opts.layer || Layer.VALIDATION,
-      ...opts,
-    });
+  constructor(message, opts = {}, details = null) {
+    super(message, { ...opts, statusCode: STATUS_CODES.BAD_REQUEST, code: CODES.VALIDATION_ERROR });
     this.details = details;
   }
 }
 
 export class UnauthorizedError extends AppError {
-  constructor(message = 'Unauthorized', opts = {}) {
-    super(message, {
-      statusCode: 401,
-      code: 'UNAUTHORIZED',
-      layer: opts.layer || Layer.AUTH,
-      ...opts,
-    });
+  constructor(message, opts = {}) {
+    super(message, { ...opts, statusCode: STATUS_CODES.UNAUTHORIZED, code: CODES.UNAUTHORIZED });
   }
 }
 
 export class ForbiddenError extends AppError {
-  constructor(message = 'Forbidden', opts = {}) {
-    super(message, {
-      statusCode: 403,
-      code: 'FORBIDDEN',
-      layer: opts.layer || Layer.AUTH,
-      ...opts,
-    });
+  constructor(message, opts = {}) {
+    super(message, { code: CODES.FORBIDDEN, ...opts, statusCode: STATUS_CODES.FORBIDDEN });
   }
 }
 
 export class ConflictError extends AppError {
-  constructor(message = 'Conflict', opts = {}) {
-    super(message, {
-      statusCode: 409,
-      code: 'CONFLICT',
-      layer: opts.layer || Layer.DATABASE,
-      ...opts,
-    });
+  constructor(message, opts = {}) {
+    super(message, { ...opts, statusCode: STATUS_CODES.CONFLICT, code: CODES.CONFLICT });
   }
 }
 
-export class DatabaseError extends AppError {
-  constructor(message = 'Database operation failed', opts = {}) {
+export class ExternalServiceError extends AppError {
+  constructor(message, opts = {}) {
     super(message, {
-      statusCode: 500,
-      code: 'DATABASE_ERROR',
-      layer: opts.layer || Layer.DATABASE,
+      statusCode: STATUS_CODES.BAD_GATEWAY,
+      code: CODES.EXTERNAL_SERVICE_ERROR,
       ...opts,
     });
   }

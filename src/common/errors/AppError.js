@@ -1,7 +1,16 @@
-import { Layer } from '../constants/layer.constants.js';
+import { http } from '@common/constants/http.constants.js';
 
 export class AppError extends Error {
-  constructor(message, { statusCode = 500, code = 'INTERNAL_ERROR', isOperational = true, layer = Layer.SERVICE, cause = null } = {}) {
+  constructor(
+    message,
+    {
+      statusCode = http.STATUS_CODES.INTERNAL_SERVER_ERROR,
+      code = http.CODES.INTERNAL_ERROR,
+      isOperational = true,
+      layer,
+      cause = null,
+    } = {}
+  ) {
     super(message);
     this.name = this.constructor.name;
     this.statusCode = statusCode;

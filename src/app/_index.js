@@ -10,3 +10,4 @@ export const app = Object.freeze({
   registerRoutes,
   startup,
 });
+

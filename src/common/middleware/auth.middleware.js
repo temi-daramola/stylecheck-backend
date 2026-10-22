@@ -1,26 +1,22 @@
-import { errors } from '@common/errors/_index.js';
-import { constants } from '@common/constants/_index.js';
+import { UnauthorizedError } from '@common/errors/subclasses.js';
+import { Layer } from '@common/constants/layer.constants.js';
+import { messages } from '@common/constants/messages.constants.js';
 import { adapters } from '@adapters/_index.js';
 
-const { UnauthorizedError } = errors;
-const { Layer, messages } = constants;
+const BEARER_PREFIX = 'Bearer ';
 const { jwtAdapter } = adapters.jwt;
 
 export const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    throw new UnauthorizedError(messages.AUTH.UNAUTHORIZED, { layer: Layer.AUTH });
+  if (!authHeader || !authHeader.startsWith(BEARER_PREFIX)) {
+    throw new UnauthorizedError(messages.COMMON.UNAUTHORIZED, { layer: Layer.AUTH });
   }
 
-  const token = authHeader.split(' ')[1];
+  const token = authHeader.slice(BEARER_PREFIX.length);
   try {
-    const decoded = jwtAdapter.verifyAccessToken(token);
-    req.user = decoded;
-    return next();
+    req.user = jwtAdapter.verifyAccessToken(token);
   } catch (error) {
-    throw new UnauthorizedError(messages.AUTH.SESSION_EXPIRED, {
-      layer: Layer.AUTH,
-      cause: error,
-    });
+    throw new UnauthorizedError(messages.COMMON.SESSION_EXPIRED, { layer: Layer.AUTH, cause: error });
   }
+  next();
 };

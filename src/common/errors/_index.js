@@ -5,8 +5,9 @@ import {
   UnauthorizedError,
   ForbiddenError,
   ConflictError,
-  DatabaseError,
+  ExternalServiceError,
 } from './subclasses.js';
+import { translateDbError } from './translateDbError.js';
 
 export const errors = Object.freeze({
   AppError,
@@ -15,5 +16,6 @@ export const errors = Object.freeze({
   UnauthorizedError,
   ForbiddenError,
   ConflictError,
-  DatabaseError,
+  ExternalServiceError,
+  translateDbError,
 });

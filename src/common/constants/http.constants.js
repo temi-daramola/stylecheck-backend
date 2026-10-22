@@ -1,5 +1,5 @@
 export const http = Object.freeze({
-  STATUS_CODES: {
+  STATUS_CODES: Object.freeze({
     OK: 200,
     CREATED: 201,
     BAD_REQUEST: 400,
@@ -9,10 +9,21 @@ export const http = Object.freeze({
     CONFLICT: 409,
     UNPROCESSABLE_ENTITY: 422,
     INTERNAL_SERVER_ERROR: 500,
-  },
-  STATUS: {
+    BAD_GATEWAY: 502,
+    SERVICE_UNAVAILABLE: 503,
+  }),
+  STATUS: Object.freeze({
     SUCCESS: 'success',
     ERROR: 'error',
-    FAIL: 'fail',
-  },
+  }),
+  CODES: Object.freeze({
+    INTERNAL_ERROR: 'INTERNAL_ERROR',
+    NOT_FOUND: 'NOT_FOUND',
+    VALIDATION_ERROR: 'VALIDATION_ERROR',
+    UNAUTHORIZED: 'UNAUTHORIZED',
+    FORBIDDEN: 'FORBIDDEN',
+    CONFLICT: 'CONFLICT',
+    DB_OPERATION_FAILED: 'DB_OPERATION_FAILED',
+    EXTERNAL_SERVICE_ERROR: 'EXTERNAL_SERVICE_ERROR',
+  }),
 });

@@ -5,3 +5,4 @@ export const db = Object.freeze({
   database,
   models,
 });
+

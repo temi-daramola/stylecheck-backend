@@ -1,27 +1,24 @@
 import jwt from 'jsonwebtoken';
 import crypto from 'node:crypto';
-import { constants } from '@common/constants/_index.js';
+import { env } from '@common/constants/env.constants.js';
 
-const { env } = constants;
+const REFRESH_TOKEN_BYTES = 40;
+const TOKEN_ENCODING = 'hex';
+const HASH_ALGORITHM = 'sha256';
+
+const hashToken = (rawToken) =>
+  crypto.createHash(HASH_ALGORITHM).update(rawToken).digest(TOKEN_ENCODING);
 
 export const jwtAdapter = Object.freeze({
-  generateAccessToken: (payload) => {
-    return jwt.sign(payload, env.JWT_SECRET, {
-      expiresIn: env.JWT_EXPIRES_IN,
-    });
-  },
+  generateAccessToken: (payload) =>
+    jwt.sign(payload, env.JWT_SECRET, { expiresIn: env.JWT_EXPIRES_IN }),
 
-  verifyAccessToken: (token) => {
-    return jwt.verify(token, env.JWT_SECRET);
-  },
+  verifyAccessToken: (token) => jwt.verify(token, env.JWT_SECRET),
 
   generateRefreshToken: () => {
-    const rawToken = crypto.randomBytes(40).toString('hex');
-    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
-    return { rawToken, tokenHash };
+    const rawToken = crypto.randomBytes(REFRESH_TOKEN_BYTES).toString(TOKEN_ENCODING);
+    return { rawToken, tokenHash: hashToken(rawToken) };
   },
 
-  hashToken: (rawToken) => {
-    return crypto.createHash('sha256').update(rawToken).digest('hex');
-  },
+  hashToken,
 });
