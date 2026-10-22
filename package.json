@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "node --import ./register.js src/server.js",
     "start": "node --import ./register.js src/server.js",
-    "create-supervisor": "node --import ./register.js scripts/create-supervisor.js",
+    "create-admin": "node --import ./register.js scripts/create-admin.js",
     "test": "node --import ./register.js --test \"tests/**/*.test.js\""
   },
   "dependencies": {
