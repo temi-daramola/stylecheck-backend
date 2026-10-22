@@ -54,7 +54,12 @@ export const env = Object.freeze({
   REFRESH_TOKEN_EXPIRES_DAYS: Number(process.env.REFRESH_TOKEN_EXPIRES_DAYS ?? 30),
 
   GEMINI_API_KEY: requireEnv('GEMINI_API_KEY'),
-  GEMINI_MODEL: process.env.GEMINI_MODEL ?? 'gemini-3.5-flash-lite',
+  GEMINI_MODEL: process.env.GEMINI_MODEL ?? 'gemini-3.5-flash',
+  // Tried after the main model keeps failing (separate quota). Set to an empty value to disable.
+  GEMINI_FALLBACK_MODEL: (process.env.GEMINI_FALLBACK_MODEL ?? 'gemini-flash-lite-latest') || null,
+  // How much the model "thinks" before answering: lower is faster. Set to an empty value to omit it
+  // (needed if you switch to a model that does not support thinking levels).
+  GEMINI_THINKING_LEVEL: (process.env.GEMINI_THINKING_LEVEL ?? 'low') || null,
 
   BREVO_API_KEY: requireEnv('BREVO_API_KEY'),
   BREVO_SENDER_EMAIL: requireEnv('BREVO_SENDER_EMAIL'),

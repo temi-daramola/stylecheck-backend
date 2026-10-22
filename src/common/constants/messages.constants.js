@@ -7,5 +7,6 @@ export const messages = Object.freeze({
     UNAUTHORIZED: 'Authentication required',
     SESSION_EXPIRED: 'Session expired, please log in again',
     UNHANDLED_ERROR_LOG: 'Unhandled error',
+    REQUEST_FAILED_LOG: 'Request failed',
   }),
 });
