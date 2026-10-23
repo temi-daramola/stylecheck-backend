@@ -25,7 +25,8 @@ export const PdfConstants = Object.freeze({
     CHAPTER: 'Chapter / Section',
     DATE: 'Check date',
     SCORE_SUFFIX: '/ 100',
-    SUMMARY: (passed, failed) => `${passed} passed, ${failed} failed`,
+    SUMMARY: (passed, failed, notVerifiable) =>
+      notVerifiable ? `${passed} passed, ${failed} failed, ${notVerifiable} not verified (not counted in the score)` : `${passed} passed, ${failed} failed`,
     HEADER_RULE: 'Rule',
     HEADER_STATUS: 'Status',
     HEADER_REASONING: 'Reasoning',

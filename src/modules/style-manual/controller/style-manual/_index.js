@@ -3,9 +3,10 @@ import { uploadManual } from '@modules/style-manual/controller/style-manual/uplo
 import { processManual } from '@modules/style-manual/controller/style-manual/processManual.js';
 
 class StyleManualController {
-  constructor(styleManualDAO, geminiAdapter) {
+  constructor(styleManualDAO, geminiAdapter, logger) {
     this.styleManualDAO = styleManualDAO;
     this.geminiAdapter = geminiAdapter;
+    this.logger = logger;
   }
 
   async getMyManual(supervisorId) {

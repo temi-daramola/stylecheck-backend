@@ -4,8 +4,13 @@ const { TEMPLATE, RULES_PLACEHOLDER, TEXT_PLACEHOLDER, PROFILE_PLACEHOLDER } = C
 const JSON_INDENT = 2;
 const ANY_PLACEHOLDER = /\{\{[A-Z_]+\}\}/g;
 
+const { NOT_VERIFIABLE_VERIFIABILITY } = ComplianceConstants;
+
+// Rules marked not-verifiable (paper, binding, signatures ...) are never sent: the file cannot show them.
+const checkableRules = (rules) => rules.filter((rule) => rule.verifiability !== NOT_VERIFIABLE_VERIFIABILITY);
+
 const numberedRules = (rules) =>
-  rules.map((rule, index) => `${index + 1}. [${rule.ruleId}] ${rule.ruleName} — ${rule.description}`).join('\n');
+  checkableRules(rules).map((rule) => `[${rule.ruleId}] ${rule.ruleName} — ${rule.description}`).join('\n');
 
 export function buildCompliancePrompt({ rules, documentText, formattingProfile }) {
   const values = {

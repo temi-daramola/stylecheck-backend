@@ -15,7 +15,7 @@ const collect = (doc) =>
 
 const contentWidth = (doc) => doc.page.width - PAGE_MARGIN * 2;
 
-const drawHeader = (doc, { institutionName, studentName, chapterSection, checkDate, score, band, passed, failed }) => {
+const drawHeader = (doc, { institutionName, studentName, chapterSection, checkDate, score, band, passed, failed, notVerifiable }) => {
   doc.font(FONT.BOLD).fontSize(SIZE.TITLE).fillColor(COLORS.NAVY).text(LABELS.PRODUCT);
   doc.font(FONT.REGULAR).fontSize(SIZE.SUBTITLE).fillColor(COLORS.MUTED).text(institutionName);
   doc.moveDown(0.6);
@@ -44,7 +44,7 @@ const drawHeader = (doc, { institutionName, studentName, chapterSection, checkDa
     .text(LABELS.SCORE_SUFFIX, PAGE_MARGIN + scoreWidth + 6, scoreY + SIZE.SCORE - SIZE.SUBTITLE - 4, { lineBreak: false });
   doc.y = scoreY + SIZE.SCORE + 8;
   doc.font(FONT.BOLD).fontSize(SIZE.SUBTITLE + 1).fillColor(bandColor).text(band, PAGE_MARGIN, doc.y);
-  doc.font(FONT.REGULAR).fontSize(SIZE.BODY).fillColor(COLORS.MUTED).text(LABELS.SUMMARY(passed, failed), PAGE_MARGIN);
+  doc.font(FONT.REGULAR).fontSize(SIZE.BODY).fillColor(COLORS.MUTED).text(LABELS.SUMMARY(passed, failed, notVerifiable), PAGE_MARGIN);
   doc.moveDown(1);
 };
 
@@ -92,7 +92,7 @@ const drawRows = (doc, rules) => {
 
     const y = doc.y;
     doc.fillColor(COLORS.BODY).text(ruleName, columns.rule.x, y, { width: columns.rule.width });
-    doc.font(FONT.BOLD).fillColor(status === 'Passed' ? COLORS.PASSED : COLORS.FAILED)
+    doc.font(FONT.BOLD).fillColor(status === 'Passed' ? COLORS.PASSED : status === 'Failed' ? COLORS.FAILED : COLORS.MUTED)
       .text(status, columns.status.x, y, { width: columns.status.width });
     doc.font(FONT.REGULAR).fillColor(COLORS.BODY)
       .text(text, columns.reasoning.x, y, { width: columns.reasoning.width });

@@ -12,11 +12,12 @@ const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const buildUrl = (model) => `${GeminiConstants.API_BASE_URL}/models/${model}${GeminiConstants.GENERATE_PATH_SUFFIX}`;
 
-const buildBody = (prompt) => ({
+const buildBody = (prompt, options = {}) => ({
   contents: [{ role: 'user', parts: [{ text: prompt }] }],
   generationConfig: {
     temperature: GeminiConstants.TEMPERATURE,
     responseMimeType: GeminiConstants.RESPONSE_MIME_TYPE,
+    ...(options.maxOutputTokens && { maxOutputTokens: options.maxOutputTokens }),
     ...(env.GEMINI_THINKING_LEVEL && { thinkingConfig: { thinkingLevel: env.GEMINI_THINKING_LEVEL } }),
   },
 });
@@ -35,13 +36,13 @@ const messageForStatus = (status) => {
   return { message: MESSAGES.REQUEST_FAILED, statusCode: http.STATUS_CODES.BAD_GATEWAY };
 };
 
-const attempt = async (prompt, model) => {
+const attempt = async (prompt, model, options) => {
   let response;
   try {
     response = await fetch(buildUrl(model), {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', [GeminiConstants.API_KEY_HEADER]: env.GEMINI_API_KEY },
-      body: JSON.stringify(buildBody(prompt)),
+      body: JSON.stringify(buildBody(prompt, options)),
       signal: AbortSignal.timeout(GeminiConstants.REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
@@ -106,13 +107,13 @@ export const geminiAdapter = Object.freeze({
    * overload, network, unreadable output) are retried, then the fallback model is tried. Every failed
    * attempt is logged with Google's real explanation. Throws ExternalServiceError when out of attempts.
    */
-  generateJson: async (prompt) => {
+  generateJson: async (prompt, options = {}) => {
     const plan = planAttempts();
     let last;
 
     for (let index = 0; index < plan.length; index += 1) {
       try {
-        return await attempt(prompt, plan[index]);
+        return await attempt(prompt, plan[index], options);
       } catch (caught) {
         if (!caught?.error) throw caught;
         last = caught;

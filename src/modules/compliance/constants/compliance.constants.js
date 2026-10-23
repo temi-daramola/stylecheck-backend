@@ -2,28 +2,30 @@ const RULES_PLACEHOLDER = '{{STYLE_RULES}}';
 const TEXT_PLACEHOLDER = '{{DOCUMENT_TEXT}}';
 const PROFILE_PLACEHOLDER = '{{FORMATTING_PROFILE}}';
 
+// This text is also the specification in the product brief (Section 9, Call 2). Keep the two identical.
 const COMPLIANCE_PROMPT = `You are a document compliance checker. You will be given:
-1. A list of style rules that the document must follow.
+1. A list of style rules, each with an ID, that the document must follow.
 2. The full text of a student academic document.
 3. The formatting profile of that document (margins, fonts, spacing, indentation).
 
-For each rule, determine whether the document PASSES or FAILS that rule.
-Use the document text to check content-based rules (citations, paragraph starters, spelling, reference list).
-Use the formatting profile to check formatting-based rules (margins, font, font size, line spacing).
-If a value in the formatting profile is null or listed under "unresolved", it could not be measured: do not guess it.
+For EVERY rule in the list, decide one of three outcomes:
+- "Passed": the document clearly follows the rule.
+- "Failed": the document clearly breaks the rule, or the required element is missing.
+- "Not verifiable": the document text and formatting profile do not contain enough information to decide. Use this whenever a value is null or listed under "unresolved" in the formatting profile, or the rule concerns something not present in the data you were given. NEVER guess: if you cannot tell, answer "Not verifiable".
 
-Return ONLY valid JSON in this exact format:
+Use the document text for content-based rules (citations, wording, headings, spelling, reference list).
+Use the formatting profile for formatting-based rules (margins, font, font size, line spacing, indentation).
+
+Be brief. For "Failed" and "Not verifiable", give one short sentence saying what was found or what is missing. For "Passed", give a few words at most (or an empty string).
+
+Return ONLY valid JSON in exactly this format, with no other text:
 {
   "results": [
-    {
-      "ruleName": "<rule name>",
-      "status": "Passed" | "Failed",
-      "reasoning": "<one or two sentences explaining the verdict>"
-    }
+    { "ruleId": "<the rule's ID exactly as given>", "status": "Passed" | "Failed" | "Not verifiable", "reasoning": "<short>" }
   ]
 }
 
-Do NOT include an overall score. Return one result object per rule, in the same order as the rules list.
+Return exactly one result for every rule, using the rule's ID exactly as given. Do NOT include an overall score.
 
 STYLE RULES:
 ${RULES_PLACEHOLDER}
@@ -62,12 +64,18 @@ export const ComplianceConstants = Object.freeze({
   MAX_SHARE_MESSAGE_LENGTH: 2000,
   PENDING_TTL_HOURS: 24,
   MANUAL_READY_STATUS: 'ready',
-  STATUS: Object.freeze({ PASSED: 'Passed', FAILED: 'Failed', PENDING: 'pending', COMPLETED: 'completed' }),
+  STATUS: Object.freeze({ PASSED: 'Passed', FAILED: 'Failed', NOT_VERIFIABLE: 'Not verifiable', PENDING: 'pending', COMPLETED: 'completed' }),
   BANDS: Object.freeze({
     FULL: 'Full Compliance',
     PARTIAL: 'Partial Compliance',
     NON_COMPLIANT: 'Non-Compliant',
   }),
+  NOT_VERIFIABLE_VERIFIABILITY: 'not-verifiable',
+  NOT_VERIFIABLE_REASON: 'This rule cannot be checked from the document file (it concerns something physical or administrative).',
+  MISSING_VERDICT_REASON: 'The AI did not give a verdict for this rule.',
+  // Up to this share (and at least this many) of verdicts may be missing before the whole run is rejected.
+  MISSING_VERDICT_TOLERANCE: Object.freeze({ share: 0.2, minimum: 3 }),
+  MAX_REASONING_LENGTH: 1000,
   BAND_THRESHOLDS: Object.freeze({ FULL_MIN: 85, PARTIAL_MIN: 60 }),
   INSTITUTION_NAME: 'Department of Information Science, University of Ibadan',
   PROMPT: Object.freeze({

@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 const ruleSchema = new mongoose.Schema(
   {
     ruleId: { type: String, required: true },
+    sourceRef: { type: String, default: '' },
+    category: { type: String, default: 'content' },
+    verifiability: { type: String, enum: ['formatting', 'text', 'both', 'not-verifiable'], default: 'both' },
     ruleName: { type: String, required: true },
     description: { type: String, required: true },
   },

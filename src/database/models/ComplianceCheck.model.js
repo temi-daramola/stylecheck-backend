@@ -27,6 +27,8 @@ const complianceCheckSchema = new mongoose.Schema(
     },
     rulesPassed: { type: Number, required: requiredWhenCompleted, min: 0 },
     rulesFailed: { type: Number, required: requiredWhenCompleted, min: 0 },
+    // Rules the document could not show (excluded from the score). Older checks had none.
+    rulesNotVerifiable: { type: Number, default: 0, min: 0 },
     checkDate: { type: Date, default: Date.now },
     sharedWithStudent: { type: Boolean, default: false },
     studentEmail: { type: String, default: null },

@@ -11,17 +11,20 @@ export function bandForScore(score) {
 
 /**
  * The score is always computed here, never by the AI:
- * score = passed / total * 100, rounded to the nearest whole number.
+ * score = passed / (passed + failed) * 100, rounded. "Not verifiable" rules are left out entirely.
  */
 export function computeScore(results) {
   const rulesPassed = results.filter((result) => result.status === STATUS.PASSED).length;
-  const rulesFailed = results.length - rulesPassed;
-  const complianceScore = results.length === 0 ? 0 : Math.round((rulesPassed / results.length) * PERCENT);
+  const rulesFailed = results.filter((result) => result.status === STATUS.FAILED).length;
+  const rulesNotVerifiable = results.length - rulesPassed - rulesFailed;
+  const checked = rulesPassed + rulesFailed;
+  const complianceScore = checked === 0 ? 0 : Math.round((rulesPassed / checked) * PERCENT);
 
   return {
     complianceScore,
     complianceBand: bandForScore(complianceScore),
     rulesPassed,
     rulesFailed,
+    rulesNotVerifiable,
   };
 }

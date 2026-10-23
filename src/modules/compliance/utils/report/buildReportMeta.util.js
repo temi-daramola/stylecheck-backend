@@ -16,7 +16,8 @@ export function buildReportData(check, ruleResults) {
     band: check.complianceBand,
     passed: check.rulesPassed,
     failed: check.rulesFailed,
-    rules: ruleResults.map(({ ruleName, status, reasoning }) => ({ ruleName, status, reasoning })),
+    notVerifiable: check.rulesNotVerifiable ?? 0,
+    rules: ruleResults.map(({ ruleId, ruleName, sourceRef, status, reasoning }) => ({ ruleId, ruleName, sourceRef, status, reasoning })),
   };
 }
 

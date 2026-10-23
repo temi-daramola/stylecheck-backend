@@ -1,4 +1,4 @@
-const toRuleDto = ({ ruleName, status, reasoning }) => ({ ruleName, status, reasoning });
+const toRuleDto = ({ ruleId, ruleName, sourceRef, status, reasoning }) => ({ ruleId, ruleName, sourceRef, status, reasoning });
 
 export function toCheckSummaryDto(check) {
   return {
@@ -17,7 +17,8 @@ export function toCheckDetailDto(check, ruleResults) {
     documentFileName: check.documentFileName,
     rulesPassed: check.rulesPassed,
     rulesFailed: check.rulesFailed,
-    totalRules: check.rulesPassed + check.rulesFailed,
+    rulesNotVerifiable: check.rulesNotVerifiable ?? 0,
+    totalRules: check.rulesPassed + check.rulesFailed + (check.rulesNotVerifiable ?? 0),
     sharedWithStudent: check.sharedWithStudent,
     studentEmail: check.studentEmail,
     rules: ruleResults.map(toRuleDto),
