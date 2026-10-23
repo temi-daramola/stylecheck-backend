@@ -4,7 +4,7 @@ import { utils } from '@modules/style-manual/utils/_index.js';
 
 const { AppError } = common.errors;
 const { Layer } = common.constants;
-const { MESSAGES, CODES, MAX_OUTPUT_TOKENS } = StyleManualConstants;
+const { MESSAGES, CODES, MAX_OUTPUT_TOKENS, REQUEST_TIMEOUT_MS } = StyleManualConstants;
 const { buildRuleExtractionPrompt, normalizeRules, findUncoveredReferences } = utils.ruleExtraction;
 const UNPROCESSABLE = 422;
 
@@ -19,7 +19,7 @@ const rulesOf = (geminiResult) => (Array.isArray(geminiResult?.rules) ? geminiRe
  * The saved record is untouched on failure.
  */
 export async function extractRules(extractedText) {
-  const options = { maxOutputTokens: MAX_OUTPUT_TOKENS };
+  const options = { maxOutputTokens: MAX_OUTPUT_TOKENS, timeoutMs: REQUEST_TIMEOUT_MS };
   const first = await this.geminiAdapter.generateJson(buildRuleExtractionPrompt(extractedText), options);
   let rawRules = rulesOf(first);
 

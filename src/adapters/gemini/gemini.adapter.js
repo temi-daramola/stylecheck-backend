@@ -43,7 +43,7 @@ const attempt = async (prompt, model, options) => {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', [GeminiConstants.API_KEY_HEADER]: env.GEMINI_API_KEY },
       body: JSON.stringify(buildBody(prompt, options)),
-      signal: AbortSignal.timeout(GeminiConstants.REQUEST_TIMEOUT_MS),
+      signal: AbortSignal.timeout(options.timeoutMs ?? GeminiConstants.REQUEST_TIMEOUT_MS),
     });
   } catch (error) {
     const isTimeout = error?.name === 'TimeoutError' || error?.name === 'AbortError';

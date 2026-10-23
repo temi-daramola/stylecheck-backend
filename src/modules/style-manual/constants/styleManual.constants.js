@@ -83,6 +83,8 @@ export const StyleManualConstants = Object.freeze({
   RULE_ID_PAD_LENGTH: 3,
   // Plenty of room for a long rule list: a truncated answer would silently lose rules.
   MAX_OUTPUT_TOKENS: 60000,
+  // Long manuals produce long answers: allow more than the usual per-attempt limit.
+  REQUEST_TIMEOUT_MS: 180000,
   COVERAGE: Object.freeze({
     // Numbered rules look like [12] or [ 12 ] (the PDF text sometimes adds a space).
     MARKER_PATTERN: /\[\s*(\d{1,3})\s*\]/g,
