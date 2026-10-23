@@ -1,6 +1,7 @@
-// Usage: npm run create-admin -- <email> "<Full Name>" <password>
-// Creates an ADMIN account. Run it once to get your first admin (or set INITIAL_ADMIN_EMAIL /
-// INITIAL_ADMIN_PASSWORD on the host instead). After signing in, add supervisors from the Admin page.
+// Creates an ADMIN account. Run it once to get your first admin; then add supervisors from the Admin page.
+// Local database:   npm run create-admin -- <email> "<Full Name>" <password>
+// Deployed database: fill in .env.admin (see .env.admin.example) and run: npm run create-admin:remote
+// Values may also come from ADMIN_EMAIL, ADMIN_NAME and ADMIN_PASSWORD.
 import { db } from '@database/_index.js';
 import { common } from '@common/_index.js';
 import { adapters } from '@adapters/_index.js';
@@ -12,7 +13,10 @@ const { database } = db;
 const { ROLES } = modules.supervisor.constants;
 
 const MIN_PASSWORD_LENGTH = 8;
-const [, , email, name, password] = process.argv;
+const [, , argEmail, argName, argPassword] = process.argv;
+const email = argEmail ?? process.env.ADMIN_EMAIL;
+const name = argName ?? process.env.ADMIN_NAME;
+const password = argPassword ?? process.env.ADMIN_PASSWORD;
 
 const fail = (message) => {
   process.stderr.write(`${message}
@@ -21,7 +25,7 @@ const fail = (message) => {
 };
 
 if (!email || !name || !password) {
-  fail('Usage: npm run create-admin -- <email> "<Full Name>" <password>');
+  fail('Missing admin details. Usage: npm run create-admin -- <email> "<Full Name>" <password>, or fill in .env.admin and run npm run create-admin:remote');
 }
 if (password.length < MIN_PASSWORD_LENGTH) {
   fail(`Password must be at least ${MIN_PASSWORD_LENGTH} characters.`);
