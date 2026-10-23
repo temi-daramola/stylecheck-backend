@@ -22,6 +22,7 @@ npm run dev
 |---|---|---|
 | `MONGODB_URI` | yes | Local MongoDB in development |
 | `FRONTEND_URL` | yes | Allowed CORS origin and the base of password-reset links |
+| `COOKIE_SAMESITE` | no | `lax` (default), `strict` or `none`. See `DEPLOYMENT.md` |
 | `JWT_SECRET` | yes | Long random string, different per stage |
 | `GEMINI_API_KEY` | yes | Google AI Studio |
 | `BREVO_API_KEY` | yes | Brevo transactional email |

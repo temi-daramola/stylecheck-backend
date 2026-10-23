@@ -9,14 +9,14 @@ export const AuthConstants = Object.freeze({
   COOKIE_OPTIONS: Object.freeze({
     httpOnly: true,
     secure: env.IS_PRODUCTION_LIKE,
-    sameSite: 'lax',
+    sameSite: env.COOKIE_SAMESITE,
     path: COOKIE_PATH,
     maxAge: env.REFRESH_TOKEN_EXPIRES_DAYS * MS_PER_DAY,
   }),
   CLEAR_COOKIE_OPTIONS: Object.freeze({
     httpOnly: true,
     secure: env.IS_PRODUCTION_LIKE,
-    sameSite: 'lax',
+    sameSite: env.COOKIE_SAMESITE,
     path: COOKIE_PATH,
   }),
   RESOURCE: 'RefreshToken',

@@ -31,6 +31,15 @@ if (stage.file) {
 
 dotenvExpand.expand({ parsed: process.env });
 
+const SAMESITE_VALUES = ['lax', 'strict', 'none'];
+const cookieSameSite = (process.env.COOKIE_SAMESITE ?? 'lax').toLowerCase();
+if (!SAMESITE_VALUES.includes(cookieSameSite)) {
+  throw new Error(`COOKIE_SAMESITE must be one of: ${SAMESITE_VALUES.join(', ')}`);
+}
+if (cookieSameSite === 'none' && !stage.productionLike) {
+  throw new Error('COOKIE_SAMESITE=none needs HTTPS: use it only with NODE_ENV=staging or production');
+}
+
 const requireEnv = (name) => {
   const value = process.env[name];
   if (value === undefined || value === '') {
@@ -48,6 +57,10 @@ export const env = Object.freeze({
 
   MONGODB_URI: requireEnv('MONGODB_URI'),
   FRONTEND_URL: requireEnv('FRONTEND_URL'),
+
+  // 'lax' when frontend and backend share a parent domain. 'none' lets the refresh cookie travel between two
+  // unrelated domains (e.g. onrender.com and ondigitalocean.app); it is only allowed on HTTPS stages.
+  COOKIE_SAMESITE: cookieSameSite,
 
   JWT_SECRET: requireEnv('JWT_SECRET'),
   JWT_EXPIRES_IN: process.env.JWT_EXPIRES_IN ?? '15m',
