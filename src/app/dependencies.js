@@ -42,7 +42,8 @@ export function createDependencies() {
   });
   const styleManualController = new styleManual.controller.StyleManualController(
     styleManualDAO,
-    geminiAdapter
+    geminiAdapter,
+    logger
   );
   const complianceController = new compliance.controller.ComplianceController({
     checkDAO,
